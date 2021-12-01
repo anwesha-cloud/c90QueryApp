@@ -29,7 +29,7 @@ export default class CreateQuery extends React.Component {
     return (
       <View style={styles.container}>
         <Text style={styles.header}>Create Query</Text>
-        <ScrollView>
+      
           <TextInput
              placeholder="Category"
              style={styles.inputBox}
@@ -47,7 +47,7 @@ export default class CreateQuery extends React.Component {
              value={this.state.query}
              multiline={true}
           />
-        </ScrollView>
+    
         <View>
           <TouchableOpacity onPress={()=>{
             this.postQuery()
@@ -72,7 +72,7 @@ const styles=StyleSheet.create({
   header:{
     textAlign:'center',
     color:'white',
-    marginTop:RFValue(40),
+    marginTop:RFValue(-90),
     fontSize:RFValue(33),
     fontWeight:'bold'
   },
@@ -99,7 +99,7 @@ const styles=StyleSheet.create({
     borderWidth :RFValue(3),
     borderColor:"white",
     backgroundColor:"rgb(253, 95, 49 )",
-    marginBottom:RFValue(200),
+    marginTop:RFValue(50),
     borderRadius:RFValue(35),
     justifyContent:'center'
   },

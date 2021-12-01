@@ -1,5 +1,6 @@
 import React from 'react'
 import {StyleSheet,View,Text} from 'react-native'
+import { RFValue } from 'react-native-responsive-fontsize';
 
 export default class Rules extends React.Component{
   render(){
