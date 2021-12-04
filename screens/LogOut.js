@@ -4,7 +4,9 @@ import firebase from 'firebase';
 
 export default class LogOut extends React.Component {
   componentDidMount() {
-    firebase.auth().signOut();
+    firebase.auth().signOut().then((res)=>{
+      this.props.navigation.navigate('LoginScreen')
+    }).catch((error)=>{console.log("Error while logging out : "+ error.message)})
   }
 
   render() {

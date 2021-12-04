@@ -31,6 +31,7 @@ export default class SignIn extends React.Component{
             if(password==confirmPassword){
                  firebase.auth().createUserWithEmailAndPassword(emailId,password)
                  .then((userCredential)=>{
+                  const userCred = firebase.auth().currentUser
                    if(studentContainerVisible){
                      firebase.firestore().collection("students").add({
                            fullName:fullName,
@@ -40,7 +41,14 @@ export default class SignIn extends React.Component{
                            grade:experience,
                            state:state,
                            country:country
+                     }).then((response)=>{
+                      this.props.navigation.navigate('LoginScreen')
+                     }).catch((error)=>{
+                       console.log(error.message)
                      })
+                     return userCred.updateProfile({
+                      displayName: fullName
+                    })
                    }else if (professionalContainerVisible){
                      firebase.firestore().collection("professionals").add({
                       fullName:fullName,
@@ -50,7 +58,14 @@ export default class SignIn extends React.Component{
                       experience:experience,
                       state:state,
                       country:country
+                     }).then((response)=>{
+                          this.props.navigation.navigate('LoginScreen')
+                     }).catch((error)=>{
+                       console.log(error.message)
                      })
+                     return userCred.updateProfile({
+                      displayName: fullName
+                    })
                    }
                  })
                  .catch((error)=>{
@@ -93,7 +108,7 @@ export default class SignIn extends React.Component{
              studentContainerVisible:false,
              professionalContainerVisible:true
            })
-           console.log(studentContainerVisible)
+        
          }}>
            <Text style={styles.button_text}>Professional</Text>
           </TouchableOpacity>
@@ -148,7 +163,7 @@ export default class SignIn extends React.Component{
       }
       {
         this.state.professionalContainerVisible && (
-          <View>
+          <View style = {styles.professionalModal}>
             <ScrollView>
                  <TextInput placeholder = "Full Name" 
                             style = {styles.inputBox}
@@ -238,15 +253,15 @@ const styles= StyleSheet.create({
     fontWeight:'bold'
   },
   button : {
-   /* height:RFValue(55),
+    height:RFValue(55),
     width: RFValue(100),
     borderWidth :RFValue(3),
     borderColor:"white",
     backgroundColor:"rgb(253, 95, 49 )",
     marginTop:RFValue(25),
-    //margin:RFValue(7),
+    margin:RFValue(7),
     borderRadius:RFValue(15),
-    alignSelf:'center' */
+    alignSelf:'center' 
   },
   buttonText:{
     textAlign :"center", 
@@ -273,5 +288,9 @@ const styles= StyleSheet.create({
     textAlign:'center',
     backgroundColor:'white'
 
- }
+ }, 
+ professionalModal : {
+       flex : 0.7, 
+       borderWidth : 1
+}
 })

@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet,View,Text} from 'react-native'
+import {StyleSheet,View,Text,TouchableOpacity} from 'react-native'
 import firebase from 'firebase'
 import { FlatList } from 'react-native-gesture-handler'
 import {Card} from 'react-native-elements'
@@ -29,25 +29,52 @@ export default class Feed extends React.Component{
      })
   }
 
-  renderItem=({item,index})=>{
-     return(
-       <Card>
-         <Card.Title>{item.created_by}</Card.Title>
-         <Card.FeaturedTitle>{item.created_on}</Card.FeaturedTitle>
-         <Card.FeaturedSubtitle>{item.query}</Card.FeaturedSubtitle>
-       </Card>
-     ) 
-  }
+  renderItem = ({item})=>{
+    console.log(item)
+    var date = item.create_On.toDate().toString() // "Thu Dec 02 2021 6:27:37 GMT+0530 (IST)"
+    var dateArray = date.split(" ")  
+        /*
+            Array [
+            "Thu",
+            "Dec",
+            "02",
+            "2021",
+            "16:27:37",
+            "GMT+0530",
+            "(IST)",
+            ] */
+    return(
+      <View>
+        <TouchableOpacity onPress={()=>{
+            this.props.navigation.navigate('Query', {query:item} )
+        }}>
+          <Text>{item.created_by}</Text>
+          <Card><Text>{item.query}</Text></Card>
+          <Text>{dateArray[2] + " "+ dateArray[1] + ", " + dateArray[3]}</Text>
+          <View style={{ borderBottomColor: 'black',borderBottomWidth: StyleSheet.hairlineWidth}}/>
+        </TouchableOpacity>
+      </View>
+    )
+}
 
   render(){
     return(
       <View style={styles.container}><Text style={styles.header}>Feed</Text>
       <View>
-        <FlatList 
+      {
+        this.state.allQueries.length == 0 ?(
+          <View>
+              <Text> No queries yet</Text>
+          </View>
+        ):
+        (
+         <FlatList 
           keyExtractor={(item,index)=>index.toString()}
           data={this.state.allQueries}
           renderItem={this.renderItem}
           />
+        )
+        }
       </View>
       </View>
     )

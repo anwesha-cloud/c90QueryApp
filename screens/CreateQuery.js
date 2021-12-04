@@ -34,7 +34,9 @@ export default class CreateQuery extends React.Component {
              placeholder="Category"
              style={styles.inputBox}
              onChangeText={(text)=>{
+              this.setState({
                 category:text
+              })
              }}
              value={this.state.category}
           />
@@ -42,7 +44,9 @@ export default class CreateQuery extends React.Component {
              placeholder="Create Query"
              style={styles.descInputBox}
              onChangeText={(text)=>{
+              this.setState({
                 query:text
+              })
              }}
              value={this.state.query}
              multiline={true}
