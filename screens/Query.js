@@ -6,34 +6,48 @@ export default class Query extends React.Component{
   constructor(){
     super();
     this.state = {
-      textInputAdded : false
+      textInput : []
     }
   }
   renderTextInput=()=>{
-    this.setState({textInputAdded : true})
-    console.log("Working")
-    return(
-      <View>
-        <Text>Hello</Text>
-        <TextInput 
-          style={styles.inputBox}
-          placeholder="add reply"
-       />
-      </View>
-      
-    )
-  }
+    console.log('Working');
+    if (this.state.textInput.length == 0) {
+      this.setState({
+        textInput: [...this.state.textInput, 1],
+      });
+    } else {
+      this.setState({
+        textInput: [],
+      });
+    }
+    console.log(this.state.textInput);
+  };
+
 
   render(){
     var query = this.props.route.params.query
     console.log(query)
     return(
-    <View style={styles.container}><Text style={styles.header}>Query</Text>
-        <Text style={styles.text}>{query.category}</Text>
-        <View>
-          <TouchableOpacity onPress={()=>{
-            this.renderTextInput()
-          }}><Text style={styles.text}>Comment</Text></TouchableOpacity></View>
+    <View style={styles.container}>
+      <Text style={styles.header}>Query</Text>
+      <Text style={styles.text}>{query.category}</Text>
+      <TouchableOpacity
+        style={styles.button}
+         onPress={() => {
+           this.renderTextInput();
+         }}>
+      <Text style={styles.buttonText}>Comment</Text>
+      </TouchableOpacity>
+        {this.state.textInput.map((item) => {
+          return (
+            <View style={{ flexDirection: 'row' }}>
+              <TextInput placeholder="Add Comment" multiline={true} />
+              <TouchableOpacity>
+                <Text>Comment</Text>
+              </TouchableOpacity>
+            </View>
+          );
+        })}
     </View>
     )
   }
@@ -63,5 +77,20 @@ header:{
 text:{
   color:'white',
   fontSize:RFValue(12)
-}
+},
+button: {
+  backgroundColor: 'orange',
+  marginTop: 50,
+  padding: 10,
+  width: 150,
+  marginLeft: 75,
+  borderRadius: 10,
+  height: 50,
+},
+buttonText: {
+  textAlign: 'center',
+  fontWeight: 'bold',
+  fontSize: 20,
+  color: 'white',
+},
 })

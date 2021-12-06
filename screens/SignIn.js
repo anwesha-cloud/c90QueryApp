@@ -115,7 +115,7 @@ export default class SignIn extends React.Component{
       </View>
       {
         this.state.studentContainerVisible && (
-          <View>
+          <View style = {styles.professionalModal}>
             <ScrollView>
                  <TextInput placeholder = "Full Name" 
                             style = {styles.inputBox}

@@ -2,6 +2,7 @@ import React from 'react'
 import {StyleSheet,View,Text,TouchableOpacity} from 'react-native'
 import firebase from 'firebase'
 import { FlatList } from 'react-native-gesture-handler'
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Card} from 'react-native-elements'
 import { RFValue } from 'react-native-responsive-fontsize';
 
@@ -9,7 +10,10 @@ export default class Feed extends React.Component{
   constructor(){
     super()
     this.state={
-       allQueries:[]
+       allQueries:[],
+       is_liked: false,
+       likes: this.props.story.value.likes,
+    
     }
   }
   componentDidMount(){
@@ -28,6 +32,23 @@ export default class Feed extends React.Component{
         })
      })
   }
+  likeAction = () => {
+    if (this.state.is_liked) {
+      firebase
+        .database()
+        .ref('queries')
+        .child('likes')
+        .set(firebase.database.ServerValue.increment(-1));
+      this.setState({ likes: (this.state.likes -= 1), is_liked: false });
+    } else {
+      firebase
+        .database()
+        .ref('queries')
+        .child('likes')
+        .set(firebase.database.ServerValue.increment(1));
+      this.setState({ likes: (this.state.likes += 1), is_liked: true });
+    }
+  };
 
   renderItem = ({item})=>{
     console.log(item)
@@ -44,13 +65,33 @@ export default class Feed extends React.Component{
             "(IST)",
             ] */
     return(
-      <View>
+      <View style={styles.cardContainer}>
         <TouchableOpacity onPress={()=>{
             this.props.navigation.navigate('Query', {query:item} )
         }}>
-          <Text>{item.created_by}</Text>
-          <Card><Text>{item.query}</Text></Card>
-          <Text>{dateArray[2] + " "+ dateArray[1] + ", " + dateArray[3]}</Text>
+          <Card>
+            <Text style={styles.created_by_text}>{item.created_by}</Text>
+            <Text style={styles.created_on_text}>{dateArray[2] + " "+ dateArray[1] + ", " + dateArray[3]}</Text>
+            <Text style={styles.query_text}>{item.query}</Text>
+          </Card>
+          <View style={styles.actionContainer}>
+              <TouchableOpacity
+                style={
+                  this.state.is_liked
+                    ? styles.likeButtonLiked
+                    : styles.likeButtonDisliked
+                }
+                onPress={() => this.likeAction()}>
+                <Ionicons
+                  name={'heart'}
+                  size={RFValue(30)}
+                />
+                <Text
+                  style={ styles.likeText}>
+                  {this.state.likes}
+                </Text>
+              </TouchableOpacity>
+            </View>
           <View style={{ borderBottomColor: 'black',borderBottomWidth: StyleSheet.hairlineWidth}}/>
         </TouchableOpacity>
       </View>
@@ -95,7 +136,53 @@ header:{
   fontSize:RFValue(27),
   fontWeight:'bold'
 },
-
+cardContainer: {
+  margin: RFValue(13),
+  backgroundColor: '#2f345d',
+  borderRadius: RFValue(20),
+},
+created_by_text: {
+  fontSize: RFValue(25),
+  color: 'white',
+},
+created_on_text: {
+  fontSize: RFValue(18),
+  color: 'white',
+},
+query_text: {
+  fontSize: RFValue(13),
+  color: 'white',
+},
+actionContainer: {
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: RFValue(10),
+},
+likeButtonLiked: {
+  width: RFValue(160),
+  height: RFValue(40),
+  justifyContent: 'center',
+  alignItems: 'center',
+  flexDirection: 'row',
+  backgroundColor: '#eb3948',
+  borderRadius: RFValue(30),
+},
+likeButtonDisliked: {
+  width: RFValue(160),
+  height: RFValue(40),
+  justifyContent: 'center',
+  alignItems: 'center',
+  flexDirection: 'row',
+  borderColor: '#eb3948',
+  borderWidth: 2,
+  borderRadius: RFValue(30),
+},
+likeText: {
+  color: 'white',
+  fontSize: 25,
+  marginLeft: 25,
+  marginTop: 6,
+},
 
 })
 
